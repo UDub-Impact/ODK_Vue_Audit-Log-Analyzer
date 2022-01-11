@@ -1,7 +1,7 @@
 <template>
   <div class="container">
       <Header @toggle-add-task="toggleAddTask" title = "ODK Audit Log Analyzer" :showAddTask="showAddTask" />
-      <router-view :showAddTask="showAddTask"></router-view>
+      <router-view ></router-view>
       <Footer />
   </div>
 
@@ -29,7 +29,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
 * {
   box-sizing: border-box;
-  margin: 0;
+  margin: 10px;
   padding: 0;
 }
 body {
