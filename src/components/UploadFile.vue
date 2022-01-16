@@ -2,18 +2,13 @@
 <template>
   <div>
     <label class="custom-file-upload">
-<<<<<<< HEAD
       <input @change="processData" type="file" accept=".csv" />
-=======
-      <input @change="onFilePicked" type="file" accept=".csv" />
->>>>>>> a3827e58350293fbbb28af0a3431f2fb8937358a
     </label>
   </div>
 </template>
 
 <script>
 import * as d3 from "d3";
-<<<<<<< HEAD
 
 export default {
   name: "UploadFile",
