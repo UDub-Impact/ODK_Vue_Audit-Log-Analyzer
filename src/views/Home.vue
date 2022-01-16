@@ -1,7 +1,7 @@
 <template>
         <p>Learn more about how to upload data into the analyer.</p>
         <router-link to='/instructions'>Click for More</router-link>
-        <h2 class="csv-header">Upload CSV File:</h2>
+        <h2>Upload CSV File:</h2>
         <UploadFile />
         <UploadFile />
         <button @click="$router.push('/summary')">Click to Analyze</button>
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style scoped>
-.csv-header {
+h2 {
     padding-top: 15px;
 }
 

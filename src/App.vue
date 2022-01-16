@@ -15,12 +15,7 @@ export default {
   name: 'App',
   components: {
     Header,
-    Footer
-  },
-  data() {
-    return {
-      showAddTask: false
-    }
+    Footer,
   },
 }
 </script>
