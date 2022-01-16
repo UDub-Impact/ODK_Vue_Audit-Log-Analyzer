@@ -10,7 +10,10 @@
   "dependencies": {
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
+<<<<<<< HEAD
     "csv-parse": "^5.0.4",
+=======
+>>>>>>> a3827e58350293fbbb28af0a3431f2fb8937358a
     "d3": "^7.3.0",
     "json-server": "^0.16.3",
     "vue": "^3.0.0",
