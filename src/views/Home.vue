@@ -1,20 +1,31 @@
 <template>
-        <p>Learn more about how to upload data into the analyer.</p>
-        <router-link to='/instructions'>Click for More</router-link>
-        <h2>Upload CSV File:</h2>
-        <UploadFile />
-        <UploadFile />
-        <button @click="$router.push('/summary')">Click to Analyze</button>
+  <router-link to='/instructions'>Learn how to upload data into the analyer.</router-link>
+  <h2>Upload CSV File:</h2>
+  <UploadFile @uploaded-file="storeFile" />
+  <!--<LineChart />-->
+  <button @click="$router.push({path: '/summary'})">Click to Analyze</button>
 </template>
 
 <script>
 import UploadFile from '../components/UploadFile'
+import LineChart from '../components/LineChart.vue'
 
 export default {
     name: 'Home',
     components: {
         UploadFile,
+        LineChart,
     },
+    data() {
+        return {
+            file: null,
+        }
+    },
+    methods: {
+        storeFile(file) {
+            this.file = file;
+        }
+    }
 }
 </script>
 

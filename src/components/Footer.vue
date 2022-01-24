@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <p>Copyright &copy; November 2021</p>
+        <p>Copyright &copy; 2022 University of Washing npm install vuex --saveImpact++</p>
     </footer>
 </template>
 

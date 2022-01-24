@@ -13,9 +13,11 @@
     "csv-parse": "^5.0.4",
     "d3": "^7.3.0",
     "json-server": "^0.16.3",
-    "vue": "^3.0.0",
+    "vue": "^3.2.27",
     "vue-chartjs": "^3.5.1",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue3-chart-v2": "^0.8.3",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

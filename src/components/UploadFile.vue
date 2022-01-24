@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <label class="custom-file-upload">
@@ -12,15 +11,21 @@ import * as d3 from "d3";
 
 export default {
   name: "UploadFile",
+  data() {
+    return {
+      file: null,
+    }
+  },
   methods: {
     // parse CSV file
     processData(e) {
-      var file = e.target.files[0];
+      this.file = e.target.files[0];
       let fileReader = new FileReader();
-      fileReader.readAsText(file);
+      fileReader.readAsText(this.file);
       fileReader.onload = (readerEvent) => {
         let auditStr = readerEvent.target.result;
         let auditData = d3.csvParse(auditStr);
+        this.$emit('uploaded-file', auditData);
 
         // format data by grouping it by instanceID
         let groupedAuditData = this.groupAuditData(auditData);
@@ -29,11 +34,13 @@ export default {
           this.calculateQuestionTime
         );
 
+        this.$store.commit('setFile', groupedSubmissionTimes);
+        console.log(groupedSubmissionTimes);
         // dictionary that maps each question to the average time it took to answer that question
         let averageQuestionTimes = this.calculateAverageQuestionValues(
           groupedSubmissionTimes
         );
-        console.log(averageQuestionTimes);
+
       };
     },
 
