@@ -11,42 +11,55 @@
     </section>
     <section>
       <h2>Average Form Submission Time</h2>
-      <p>{{ getAvgFormSubmissionTime() }}</p>
+      <p>{{ getAvgFormSubmissionTime() }} s</p>
     </section>
   </article>
   <article>
-  <select id="pet-select">
+  <select id="graph-options">
     <option value="">Choose a chart to display</option>
-    <option value="dog">Average Time Spent Responding Per Question</option>
-    <option value="cat">Average Number of Response Changes Per Question</option>
-    <option value="hamster">Time Spent Responding Per Submission</option>
+    <option value="avg-per-question">Average Time Spent Responding Per Question</option>
+    <option value="avg-response-changes">Average Number of Response Changes Per Question</option>
+    <option value="time-per-submission">Time Spent Responding Per Submission</option>
   </select>
   </article>
+  <AvgTimePerQuestion />
   <router-link to="/">Go Back To Home</router-link>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
+import AvgTimePerQuestion from '../components/AvgTimePerQuestion'
 
  export default {
     name: 'Summary',
+    components: {
+      AvgTimePerQuestion
+    },
     computed: {
       ...mapGetters({file: "getData"})
     },
     methods: {
       getFirstKey() {
         let keyString = Object.keys(this.file)[0] + '';
-        return this.file[keyString];
+        return keyString;
       },
       getNumQuestions() {
         let key = this.getFirstKey();
         let value = this.file[key];
-        /* temporary value!! */
-        return 0;
+        return Object.keys(value).length;
       },
       getAvgFormSubmissionTime() {
-        /* temporary value!! */
-       return 0;
+        console.log(this.file);
+        let uids = Object.keys(this.file);
+        let totalTimeAllUsers = 0;
+        uids.forEach(user => {
+          let value = this.file[user]
+          let questions = Object.keys(value);
+          questions.forEach(question => {
+            totalTimeAllUsers += value[question];
+          });
+        });
+        return Math.round(totalTimeAllUsers/uids.length);
       }
     }
  }

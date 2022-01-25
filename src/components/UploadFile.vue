@@ -25,7 +25,7 @@ export default {
       fileReader.onload = (readerEvent) => {
         let auditStr = readerEvent.target.result;
         let auditData = d3.csvParse(auditStr);
-        this.$emit('uploaded-file', auditData);
+        //this.$emit('uploaded-file', auditData);
 
         // format data by grouping it by instanceID
         let groupedAuditData = this.groupAuditData(auditData);
