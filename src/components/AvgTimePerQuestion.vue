@@ -1,25 +1,38 @@
-<template>
-  <p>{{ test() }}</p>
-</template>
-
-
 <script>
 import { defineComponent } from 'vue'
 import { Bar } from 'vue3-chart-v2'
+import {mapGetters} from "vuex";
 
 export default defineComponent({
-  import {mapGetters} from "vuex";
+
 
   name: 'MonthlyChart',
   computed: {
       ...mapGetters({file: "getData"})
   },
   methods: {
+    /**
+     * return some sort of an array- need two arrays- one for the labels and other for the average time
+     */
     test() {
         let averageQuestionTimes = this.calculateAverageQuestionValues(
-          groupedSubmissionTimes
+          this.file
         );
-        return averageQuestionTimes;
+         console.log(averageQuestionTimes);
+
+          let questionLabels = [];
+          let avgAnswerTimes = [];
+
+          averageQuestionTimes.forEach(user => {
+          questionLabels.push(user["node"]);
+          console.log(user["node"]);
+          avgAnswerTimes.push(user["value"]);
+          console.log(user["value"]);
+        });
+        console.log([averageQuestionTimes]);
+
+         return [questionLabels, avgAnswerTimes];
+
     },
     calculateAverageQuestionValues(groupedSubmissionValues) {
       let questionAggregate = {};
@@ -71,12 +84,12 @@ export default defineComponent({
   mounted () {
     // Overwriting base render method with actual data.
     this.renderChart({
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      labels: this.test()[0],
       datasets: [
         {
-          label: 'GitHub Commits',
+          label: 'Average Time (s)',
           backgroundColor: '#f87979',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+          data:this.test()[1]
         }
       ]
     })

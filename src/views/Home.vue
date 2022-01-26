@@ -8,7 +8,7 @@
 
 <script>
 import UploadFile from '../components/UploadFile'
-import LineChart from '../components/LineChart.vue'
+import LineChart from '../components/Bar.vue'
 
 export default {
     name: 'Home',

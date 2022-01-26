@@ -40,7 +40,7 @@ export default {
         let averageQuestionTimes = this.calculateAverageQuestionValues(
           groupedSubmissionTimes
         );
-
+        console.log(e.target.files);
       };
     },
 
