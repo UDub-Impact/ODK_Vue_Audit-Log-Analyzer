@@ -127,7 +127,4 @@ export default {
 </script>
 
 <style scoped>
-.custom-file-upload {
-  align-content: center;
-}
 </style>
