@@ -87,7 +87,7 @@ export default defineComponent({
         {
           label: 'Average Time (s)',
           backgroundColor: '#f87979',
-          data:this.()[1]
+          data:this.graphData()[1]
         }
       ]
     })
