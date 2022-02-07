@@ -4,8 +4,6 @@ import { Bar } from 'vue3-chart-v2'
 import {mapGetters} from "vuex";
 
 export default defineComponent({
-
-
   name: 'MonthlyChart',
   computed: {
       ...mapGetters({file: "getData"})
@@ -14,7 +12,7 @@ export default defineComponent({
     /**
      * return some sort of an array- need two arrays- one for the labels and other for the average time
      */
-    test() {
+    graphData() {
         let averageQuestionTimes = this.calculateAverageQuestionValues(
           this.file
         );
@@ -84,12 +82,12 @@ export default defineComponent({
   mounted () {
     // Overwriting base render method with actual data.
     this.renderChart({
-      labels: this.test()[0],
+      labels: this.graphData()[0],
       datasets: [
         {
           label: 'Average Time (s)',
           backgroundColor: '#f87979',
-          data:this.test()[1]
+          data:this.()[1]
         }
       ]
     })
