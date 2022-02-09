@@ -34,7 +34,7 @@ export default {
           this.calculateQuestionTime
         );
 
-        this.$store.commit('setFile', groupedSubmissionTimes);
+        this.$store.commit('setFile', groupedAuditData);
         console.log(groupedSubmissionTimes);
         // dictionary that maps each question to the average time it took to answer that question
         let averageQuestionTimes = this.calculateAverageQuestionValues(

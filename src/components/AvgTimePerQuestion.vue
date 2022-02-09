@@ -1,42 +1,50 @@
 <script>
-import { defineComponent } from 'vue'
-import { Bar } from 'vue3-chart-v2'
-import {mapGetters} from "vuex";
+import { defineComponent } from "vue";
+import { Bar } from "vue3-chart-v2";
+import { mapGetters } from "vuex";
 
 export default defineComponent({
-  name: 'MonthlyChart',
+  name: "MonthlyChart",
   computed: {
-      ...mapGetters({file: "getData"})
+    ...mapGetters({ file: "getData" }),
   },
   methods: {
     /**
      * return some sort of an array- need two arrays- one for the labels and other for the average time
      */
     graphData() {
-        let averageQuestionTimes = this.calculateAverageQuestionValues(
-          this.file
-        );
-         console.log(averageQuestionTimes);
+      console.log("groupedAuditData: ");
+      const groupedAuditData = JSON.parse(JSON.stringify(this.file));
+      console.log(groupedAuditData);
+      let groupedSubmissionTimes = this.reduceSubmissionQuestions(
+        groupedAuditData,
+        this.calculateQuestionTime
+      );
+      console.log("groupedSubmissionTimes: ");
+      console.log(groupedSubmissionTimes);
+      let averageQuestionTimes = this.calculateAverageQuestionValues(
+        groupedSubmissionTimes
+      );
+      console.log(averageQuestionTimes);
 
-          let questionLabels = [];
-          let avgAnswerTimes = [];
+      let questionLabels = [];
+      let avgAnswerTimes = [];
 
-          averageQuestionTimes.forEach(user => {
-          questionLabels.push(user["node"]);
-          console.log(user["node"]);
-          avgAnswerTimes.push(user["value"]);
-          console.log(user["value"]);
-        });
-        console.log([averageQuestionTimes]);
+      averageQuestionTimes.forEach((user) => {
+        questionLabels.push(user["node"]);
 
-         return [questionLabels, avgAnswerTimes];
+        avgAnswerTimes.push(user["value"]);
+      });
 
+      return [questionLabels, avgAnswerTimes];
     },
     calculateAverageQuestionValues(groupedSubmissionValues) {
       let questionAggregate = {};
       let questionResponses = {};
 
-      for (const [instanceID, questions] of Object.entries(groupedSubmissionValues)) {
+      for (const [instanceID, questions] of Object.entries(
+        groupedSubmissionValues
+      )) {
         for (const [node, value] of Object.entries(questions)) {
           if (!(node in questionAggregate)) {
             questionAggregate[node] = 0;
@@ -58,15 +66,17 @@ export default defineComponent({
       return questionAverages;
     },
 
-  calculateQuestionTime(events) {
+    calculateQuestionTime(events) {
       let totalTime = 0;
       for (const event of events) {
         if (event["end"] && event["start"]) {
           totalTime += event["end"] - event["start"];
         }
       }
-  },
-  reduceSubmissionQuestions(groupedData, fn) {
+      // convert time from ms to s
+      return totalTime / 1000;
+    },
+    reduceSubmissionQuestions(groupedData, fn) {
       let submissionTimes = {};
       for (const [instanceID, questions] of Object.entries(groupedData)) {
         submissionTimes[instanceID] = {};
@@ -79,19 +89,18 @@ export default defineComponent({
     },
   },
   extends: Bar,
-  mounted () {
+  mounted() {
     // Overwriting base render method with actual data.
     this.renderChart({
       labels: this.graphData()[0],
       datasets: [
         {
-          label: 'Average Time (s)',
-          backgroundColor: '#f87979',
-          data:this.graphData()[1]
-        }
-      ]
-    })
+          label: "Average Time (s)",
+          backgroundColor: "#f87979",
+          data: this.graphData()[1],
+        },
+      ],
+    });
   },
-})
-
+});
 </script>

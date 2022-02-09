@@ -22,14 +22,14 @@
       <option value="3">Time Spent Responding Per Submission</option>
     </select>
   </article>
-  <div v-if="graphNum==1">
-    <AvgTimePerQuestion />
+  <div class="graph" v-if="graphNum == 1">
+    <AvgTimePerQuestion :width="300" :height="150"/>
   </div>
-  <div v-else-if="graphNum==2">
-    <AvgChangesPerQuestion />
+  <div class="graph" v-else-if="graphNum == 2">
+    <AvgChangesPerQuestion :width="300" :height="150"/>
   </div>
-  <div v-else-if="graphNum==3">
-    <TimeSpentPerQuestion />
+  <div class="graph" v-else-if="graphNum == 3">
+    <TimeSpentPerQuestion :width="300" :height="150"/>
   </div>
   <router-link to="/">Go Back To Home</router-link>
 </template>
@@ -50,30 +50,42 @@ export default {
   data() {
     return {
       graphNum: 0,
-    }
+    };
   },
   computed: {
     ...mapGetters({ file: "getData" }),
-    displaySelectedComponent() {
-      let graphDivs = document.getElementById("graph-components").children;
-      let selected = getSelectedFromDropDown();
-      for (var graphDiv of graphDivs) {
-        if (graphDiv.id !== selected) {
-          // change the value of the data vars
-          this.data[graphDiv.id] = false;
-        }
-      }
-      this.data[selected] = true;
-    },
-    getSelectedFromDropDown() {
-      for (var option of document.getElementById("graph-options")) {
-        if (option.selected) {
-          return option.value;
-        }
-      }
-    },
   },
   methods: {
+    getGroupedAuditData() {
+      const groupedAuditData = JSON.parse(JSON.stringify(this.file));
+      console.log(groupedAuditData);
+      let groupedSubmissionTimes = this.reduceSubmissionQuestions(
+        groupedAuditData,
+        this.calculateQuestionTime
+      );
+      return groupedSubmissionTimes;
+    },
+    calculateQuestionTime(events) {
+      let totalTime = 0;
+      for (const event of events) {
+        if (event["end"] && event["start"]) {
+          totalTime += event["end"] - event["start"];
+        }
+      }
+      // convert time from ms to s
+      return totalTime / 1000;
+    },
+    reduceSubmissionQuestions(groupedData, fn) {
+      let submissionTimes = {};
+      for (const [instanceID, questions] of Object.entries(groupedData)) {
+        submissionTimes[instanceID] = {};
+
+        for (const [node, events] of Object.entries(questions)) {
+          submissionTimes[instanceID][node] = fn(events);
+        }
+      }
+      return submissionTimes;
+    },
     getFirstKey() {
       let keyString = Object.keys(this.file)[0] + "";
       return keyString;
@@ -84,11 +96,12 @@ export default {
       return Object.keys(value).length;
     },
     getAvgFormSubmissionTime() {
-      console.log(this.file);
-      let uids = Object.keys(this.file);
+      let groupedSubmissionTimes = this.getGroupedAuditData();
+      console.log(groupedSubmissionTimes);
+      let uids = Object.keys(groupedSubmissionTimes);
       let totalTimeAllUsers = 0;
       uids.forEach((user) => {
-        let value = this.file[user];
+        let value = groupedSubmissionTimes[user];
         let questions = Object.keys(value);
         questions.forEach((question) => {
           totalTimeAllUsers += value[question];
