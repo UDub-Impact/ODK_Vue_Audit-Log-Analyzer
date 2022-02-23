@@ -1,4 +1,8 @@
 <template>
+<div>
+<router-link to="/"><img align="left" src="../assets/back_btn.jpg"></router-link>
+</div>
+<div>
   <h1>Summary Statistics</h1>
   <article>
     <section>
@@ -23,15 +27,29 @@
     </select>
   </article>
   <div class="graph" v-if="graphNum == 1">
+    <p>This bar chart shows the average time spent responding to each
+      question across submissions. This is the total time that the
+      question has been selected across all submissions divided by the
+      number of submissions that selected the question.</p>
     <AvgTimePerQuestion :width="300" :height="150"/>
+    
   </div>
   <div class="graph" v-else-if="graphNum == 2">
+    <p>This bar chart shows the average number of times the
+      response to each question is changed. This is the total
+      number of times the response to this question was changed
+      divided by the number of submissions that selected the question.
+      When calculating the number of changes, the first entry
+      to a question isn't counted, only subsequent changes.</p>
     <AvgChangesPerQuestion :width="300" :height="150"/>
   </div>
   <div class="graph" v-else-if="graphNum == 3">
+    <p>This bar chart shows the total amount of time spent
+      answering questions per submission. This metric only
+      includes time spent on a submission while selecting a question.</p>
     <TimeSpentPerQuestion :width="300" :height="150"/>
   </div>
-  <router-link to="/">Go Back To Home</router-link>
+  </div>
 </template>
 
 <script>
@@ -127,13 +145,38 @@ article {
   margin: 20px auto 20px auto;
   justify-content: center;
 }
-
+select {
+  width:50%;
+  height:50px;
+  font-size: 20px;
+}
 option {
   text-align: center;
+  font-size:20px;
+   width:50%;
+  height:50px;
+}
+
+img{
+  height: 80px;
+  position: relative;
 }
 
 h2 {
   font-size: 15pt;
+}
+
+h1{
+  margin-left: -10px;
+}
+
+p {
+  border-top:1px dotted;
+  border-bottom:1px dotted;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+  width: 50%; /* whatever width you want */
 }
 
 section p {
@@ -142,6 +185,12 @@ section p {
   font-style: bold;
   animation: fadeIn linear 3s;
 }
+
+div > p {
+  font-size: 20px;
+}
+
+
 
 @keyframes fadeIn {
   0% {

@@ -7,6 +7,39 @@ export default defineComponent({
   name: "MonthlyChart",
   computed: {
     ...mapGetters({ file: "getData" }),
+  },data() {
+    return {
+      options: {
+        responsive: true,
+        title: {
+          text: "Average Time Spent Per Question",
+          display: true,
+          fontSize: 24,
+        },
+        scales: {
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Time (seconds)",
+                fontColor: "teal",
+                fontSize: 18,
+              },
+            },
+          ],
+          xAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Questions",
+                fontColor: "teal",
+                fontSize: 18,
+              },
+            },
+          ],
+        },
+      },
+    };
   },
   methods: {
     /**
@@ -33,7 +66,7 @@ export default defineComponent({
       averageQuestionTimes.forEach((user) => {
         questionLabels.push(user["node"]);
 
-        avgAnswerTimes.push(user["value"]);
+        avgAnswerTimes.push(user["value"].toFixed(2));
       });
 
       return [questionLabels, avgAnswerTimes];
@@ -100,7 +133,7 @@ export default defineComponent({
           data: this.graphData()[1],
         },
       ],
-    });
+    }, this.options);
   },
 });
 </script>

@@ -8,6 +8,40 @@ export default defineComponent({
   computed: {
     ...mapGetters({ file: "getData" }),
   },
+  data() {
+    return {
+      options: {
+        responsive: true,
+        title: {
+          text: "Avg Changes Per Question",
+          display: true,
+          fontSize: 24,
+        },
+        scales: {
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Number of Changes",
+                fontColor: "teal",
+                fontSize: 18,
+              },
+            },
+          ],
+          xAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Questions",
+                fontColor: "teal",
+                fontSize: 18,
+              },
+            },
+          ],
+        },
+      },
+    };
+  },
   methods: {
     /**
      * return some sort of an array- need two arrays- one for the labels and other for the average time
@@ -21,12 +55,10 @@ export default defineComponent({
         this.calculateQuestionChanges
       );
       console.log(groupedSubmissionQuestionChanges);
-      
+
       let averageQuestionChanges = this.calculateAverageQuestionValues(
         groupedSubmissionQuestionChanges
       );
-
-
 
       let questionLabels = [];
       let avgAnswerTimes = [];
@@ -34,7 +66,7 @@ export default defineComponent({
       averageQuestionChanges.forEach((user) => {
         questionLabels.push(user["node"]);
 
-        avgAnswerTimes.push(user["value"]);
+        avgAnswerTimes.push(user["value"].toFixed(2));
       });
 
       return [questionLabels, avgAnswerTimes];
@@ -91,16 +123,19 @@ export default defineComponent({
   extends: Bar,
   mounted() {
     // Overwriting base render method with actual data.
-    this.renderChart({
-      labels: this.graphData()[0],
-      datasets: [
-        {
-          label: "Average Time (s)",
-          backgroundColor: "#f87979",
-          data: this.graphData()[1],
-        },
-      ],
-    });
+    this.renderChart(
+      {
+        labels: this.graphData()[0],
+        datasets: [
+          {
+            label: "Average Time (s)",
+            backgroundColor: "#f87979",
+            data: this.graphData()[1],
+          },
+        ],
+      },
+      this.options
+    );
   },
 });
 </script>
