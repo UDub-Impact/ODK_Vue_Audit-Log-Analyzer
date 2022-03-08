@@ -1,45 +1,33 @@
-<script>
-import { defineComponent } from "vue";
-import { Bar } from "vue3-chart-v2";
-import { mapGetters } from "vuex";
+<template>
+  <select id="graph-filter">
+      <option value="lessThan"> Less Than </option>
+      <option value="greaterThan"> Greater Than </option>
+    </select>
 
-export default defineComponent({
+    <input id="filterLimit" placeholder="Filter Limit"> <br><br>
+    <button class="button" onClick="applyFilter(filterLimit)"> Apply Filter</button>
+    <p>{{this.data}} </p>
+    <AvgTimePerQuestion />
+</template>
+<script>
+import { mapGetters } from "vuex";
+import AvgTimePerQuestion from "../components/AvgTimePerQuestion.vue"
+export default {
   name: "MonthlyChart",
+  components: {
+    AvgTimePerQuestion
+  },
   computed: {
     ...mapGetters({ file: "getData" }),
-  },data() {
+  },
+  data () {
     return {
-      options: {
-        responsive: true,
-        title: {
-          text: "Average Time Spent Per Question",
-          display: true,
-          fontSize: 24,
-        },
-        scales: {
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Time (seconds)",
-                fontColor: "teal",
-                fontSize: 18,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Questions",
-                fontColor: "teal",
-                fontSize: 18,
-              },
-            },
-          ],
-        },
-      },
-    };
+      data: []
+    }
+  },
+  created() {
+     this.data = this.graphData();
+    console.log("inside created")
   },
   methods: {
     /**
@@ -125,20 +113,5 @@ export default defineComponent({
       console.log(data);
     }
   },
-
-  extends: Bar,
-  mounted() {
-    // Overwriting base render method with actual data.
-    this.renderChart({
-      labels: this.graphData()[0],
-      datasets: [
-        {
-          label: "Average Time (s)",
-          backgroundColor: "#f87979",
-          data: this.graphData()[1],
-        },
-      ],
-    }, this.options);
-  },
-});
+  };
 </script>

@@ -31,7 +31,7 @@
       question across submissions. This is the total time that the
       question has been selected across all submissions divided by the
       number of submissions that selected the question.</p>
-    <AvgTimePerQuestion :width="300" :height="150"/>
+    <AvgTimeOuterFile :width="300" :height="150"/>
     
   </div>
   <div class="graph" v-else-if="graphNum == 2">
@@ -57,6 +57,7 @@ import { mapGetters } from "vuex";
 import AvgTimePerQuestion from "../components/AvgTimePerQuestion";
 import AvgChangesPerQuestion from "../components/AvgChangesPerQuestion";
 import TimeSpentPerQuestion from "../components/TimeSpentPerQuestion";
+import AvgTimeOuterFile from '../components/AvgTimeOuterFile.vue';
 
 export default {
   name: "Summary",
@@ -64,6 +65,7 @@ export default {
     AvgTimePerQuestion,
     AvgChangesPerQuestion,
     TimeSpentPerQuestion,
+    AvgTimeOuterFile
   },
   data() {
     return {
