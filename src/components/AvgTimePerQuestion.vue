@@ -8,15 +8,15 @@
   <button class="button" onClick="applyFilter(filterLimit)">
     Apply Filter
   </button>
-  <BarChart :data=this.data :stylingLabels= this.styling> </BarChart>
+  <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
 </template>
 <script>
 import { mapGetters } from "vuex";
-import AvgTimePerQuestion from "./BarChart.vue";
+import BarChart from "./BarChart.vue";
 export default {
-  name: "BarChart",
+  name: "AvgTimePerQuestion",
   components: {
-    AvgTimePerQuestion,
+    BarChart,
   },
   computed: {
     ...mapGetters({ file: "getData" }),
@@ -33,26 +33,20 @@ export default {
   },
   created() {
     this.data = this.graphData();
-    console.log("inside created");
   },
   methods: {
     /**
      * return some sort of an array- need two arrays- one for the labels and other for the average time
      */
     graphData() {
-      console.log("groupedAuditData: ");
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
-      console.log(groupedAuditData);
       let groupedSubmissionTimes = this.reduceSubmissionQuestions(
         groupedAuditData,
         this.calculateQuestionTime
       );
-      console.log("groupedSubmissionTimes: ");
-      console.log(groupedSubmissionTimes);
       let averageQuestionTimes = this.calculateAverageQuestionValues(
         groupedSubmissionTimes
       );
-      console.log(averageQuestionTimes);
 
       let questionLabels = [];
       let avgAnswerTimes = [];

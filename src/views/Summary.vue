@@ -1,6 +1,6 @@
 <template>
 <div>
-<router-link to="/"><img align="left" src="../assets/back_btn.jpg"></router-link>
+<router-link to="/"><img src="../assets/back-button.png"></router-link>
 </div>
 <div>
   <h1>Summary Statistics</h1>
@@ -31,8 +31,7 @@
       question across submissions. This is the total time that the
       question has been selected across all submissions divided by the
       number of submissions that selected the question.</p>
-    <AvgTimeOuterFile />
-    
+    <AvgTimePerQuestion />
   </div>
   <div class="graph" v-else-if="graphNum == 2">
     <p>This bar chart shows the average number of times the
@@ -56,14 +55,14 @@
 import { mapGetters } from "vuex";
 import AvgChangesPerQuestion from "../components/AvgChangesPerQuestion";
 import TimeSpentPerQuestion from "../components/TimeSpentPerQuestion";
-import AvgTimeOuterFile from '../components/AvgTimeOuterFile.vue';
+import AvgTimePerQuestion from '../components/AvgTimePerQuestion.vue';
 
 export default {
   name: "Summary",
   components: {
     AvgChangesPerQuestion,
     TimeSpentPerQuestion,
-    AvgTimeOuterFile
+    AvgTimePerQuestion,
   },
   data() {
     return {
@@ -158,7 +157,7 @@ option {
 }
 
 img{
-  height: 80px;
+  height: 30px;
   position: relative;
 }
 

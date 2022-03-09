@@ -1,60 +1,42 @@
+<template>
+  <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+</template>
 <script>
 import { defineComponent } from "vue";
-import { Bar } from "vue3-chart-v2";
+import BarChart from "./BarChart.vue";
 import { mapGetters } from "vuex";
 
 export default defineComponent({
-  name: "BarChart",
+  name: "samplechart",
+  components: {
+    BarChart,
+  },
   computed: {
     ...mapGetters({ file: "getData" }),
   },
   data() {
     return {
-      options: {
-        responsive: true,
-        title: {
-          text: "Avg Changes Per Question",
-          display: true,
-          fontSize: 24,
-        },
-        scales: {
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Number of Changes",
-                fontColor: "teal",
-                fontSize: 18,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Questions",
-                fontColor: "teal",
-                fontSize: 18,
-              },
-            },
-          ],
-        },
-      },
+      data: [],
+      styling: {
+         text: "Average Changes Per Question",
+         labelStringX: "Questions",
+         labelStringY: "Number of Changes",
+      }
     };
+  },
+  created() {
+    this.data = this.graphData();
   },
   methods: {
     /**
      * return some sort of an array- need two arrays- one for the labels and other for the average time
      */
     graphData() {
-      console.log("groupedAuditData: ");
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
-      console.log(groupedAuditData);
       let groupedSubmissionQuestionChanges = this.reduceSubmissionQuestions(
         groupedAuditData,
         this.calculateQuestionChanges
       );
-      console.log(groupedSubmissionQuestionChanges);
 
       let averageQuestionChanges = this.calculateAverageQuestionValues(
         groupedSubmissionQuestionChanges
@@ -119,23 +101,6 @@ export default defineComponent({
       }
       return submissionTimes;
     },
-  },
-  extends: Bar,
-  mounted() {
-    // Overwriting base render method with actual data.
-    this.renderChart(
-      {
-        labels: this.graphData()[0],
-        datasets: [
-          {
-            label: "Average Time (s)",
-            backgroundColor: "#f87979",
-            data: this.graphData()[1],
-          },
-        ],
-      },
-      this.options
-    );
   },
 });
 </script>

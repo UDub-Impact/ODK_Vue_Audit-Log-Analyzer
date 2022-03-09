@@ -1,57 +1,39 @@
+<template>
+  <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+</template>
 <script>
 import { defineComponent } from "vue";
-import { Bar } from "vue3-chart-v2";
+import BarChart from "./BarChart.vue";
 import { mapGetters } from "vuex";
 
 export default defineComponent({
-  name: "BarChart",
+  name: "samplechart",
+  components: {
+    BarChart,
+  },
   computed: {
     ...mapGetters({ file: "getData" }),
   },
   data() {
     return {
-      options: {
-        responsive: true,
-        title: {
-          text: "Avg Changes Per Question",
-          display: true,
-          fontSize: 24,
-        },
-        scales: {
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Time (seconds)",
-                fontColor: "teal",
-                fontSize: 18,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "Questions",
-                fontColor: "teal",
-                fontSize: 18,
-              },
-            },
-          ],
-        },
-      },
+      data: [],
+      styling: {
+         text: "Avg Changed Per Question",
+         labelStringX: "Questions",
+         labelStringY: "Time (seconds)",
+      }
     };
+  },
+  created() {
+    this.data = this.graphData();
   },
   methods: {
     /**
      * return some sort of an array- need two arrays- one for the labels and other for the average time
      */
     graphData() {
-      console.log("groupedAuditData: ");
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
-      console.log(groupedAuditData);
 
-      // new
       let groupedSubmissionQuestionTimes = this.reduceSubmissionQuestions(
         groupedAuditData,
         this.calculateQuestionTime
@@ -59,8 +41,6 @@ export default defineComponent({
       let submissionTimes = this.calculateAggregateSubmissionValues(
         groupedSubmissionQuestionTimes
       );
-      console.log("submissionTimes");
-      console.log(submissionTimes);
 
       let questionLabels = [];
       let avgAnswerTimes = [];
@@ -70,8 +50,6 @@ export default defineComponent({
 
         avgAnswerTimes.push(user["value"].toFixed(2));
       });
-
-      
 
       return [questionLabels, avgAnswerTimes];
     },
@@ -92,7 +70,6 @@ export default defineComponent({
           questionResponses[node]++;
         }
       }
-
       let questionAverages = [];
       for (const node of Object.keys(questionAggregate)) {
         let entry = {};
@@ -109,7 +86,6 @@ export default defineComponent({
           totalTime += event["end"] - event["start"];
         }
       }
-
       // convert time from ms to s
       return totalTime / 1000;
     },
@@ -143,23 +119,6 @@ export default defineComponent({
       }
       return submissionTimes;
     },
-  },
-  extends: Bar,
-  mounted() {
-    // Overwriting base render method with actual data.
-    this.renderChart(
-      {
-        labels: this.graphData()[0],
-        datasets: [
-          {
-            label: "Average Time (s)",
-            backgroundColor: "#f87979",
-            data: this.graphData()[1],
-          },
-        ],
-      },
-      this.options
-    );
   },
 });
 </script>

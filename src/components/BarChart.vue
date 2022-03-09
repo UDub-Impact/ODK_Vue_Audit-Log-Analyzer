@@ -5,8 +5,8 @@ import { Bar } from "vue3-chart-v2";
 export default defineComponent({
   name: "BarChart",
   props: {
-    data:[],
-    stylingLabels:{}
+    data: [],
+    stylingLabels: {}
   },
   data() {
     return {
@@ -45,13 +45,12 @@ export default defineComponent({
   },
 
   extends: Bar,
-  
+
   mounted() {
     console.log("inside mounted for inner file");
     console.log(this.data);
     // Overwriting base render method with actual data.
     this.renderChart({
-      
       labels: this.data[0],
       datasets: [
         {
