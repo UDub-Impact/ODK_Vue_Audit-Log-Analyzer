@@ -4,7 +4,7 @@ import { Bar } from "vue3-chart-v2";
 import { mapGetters } from "vuex";
 
 export default defineComponent({
-  name: "MonthlyChart",
+  name: "BarChart",
   computed: {
     ...mapGetters({ file: "getData" }),
   },

@@ -1,33 +1,39 @@
 <template>
   <select id="graph-filter">
-      <option value="lessThan"> Less Than </option>
-      <option value="greaterThan"> Greater Than </option>
-    </select>
+    <option value="lessThan">Less Than</option>
+    <option value="greaterThan">Greater Than</option>
+  </select>
 
-    <input id="filterLimit" placeholder="Filter Limit"> <br><br>
-    <button class="button" onClick="applyFilter(filterLimit)"> Apply Filter</button>
-    <p>{{this.data}} </p>
-    <AvgTimePerQuestion />
+  <input id="filterLimit" placeholder="Filter Limit" /> <br /><br />
+  <button class="button" onClick="applyFilter(filterLimit)">
+    Apply Filter
+  </button>
+  <BarChart :data=this.data :stylingLabels= this.styling> </BarChart>
 </template>
 <script>
 import { mapGetters } from "vuex";
-import AvgTimePerQuestion from "../components/AvgTimePerQuestion.vue"
+import AvgTimePerQuestion from "./BarChart.vue";
 export default {
-  name: "MonthlyChart",
+  name: "BarChart",
   components: {
-    AvgTimePerQuestion
+    AvgTimePerQuestion,
   },
   computed: {
     ...mapGetters({ file: "getData" }),
   },
-  data () {
+  data() {
     return {
-      data: []
-    }
+      data: [],
+      styling: {
+         text: "Average Time Spent Per Question",
+         labelStringX: "Time (seconds)",
+         labelStringY: "Questions",
+      }
+    };
   },
   created() {
-     this.data = this.graphData();
-    console.log("inside created")
+    this.data = this.graphData();
+    console.log("inside created");
   },
   methods: {
     /**
@@ -108,10 +114,10 @@ export default {
       }
       return submissionTimes;
     },
-    applyFilter (val) {
-      let data = graphData()
+    applyFilter(val) {
+      let data = graphData();
       console.log(data);
-    }
+    },
   },
-  };
+};
 </script>
