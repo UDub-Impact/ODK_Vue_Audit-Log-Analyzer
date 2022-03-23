@@ -1,13 +1,14 @@
 <template>
-  <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+  <BarChart :data=this.data :stylingLabels=this.styling5></BarChart>
 </template>
+
 <script>
 import { defineComponent } from "vue";
-import BarChart from "./BarChart.vue";
+import BarChart from "../BarChart.vue";
 import { mapGetters } from "vuex";
 
 export default defineComponent({
-  name: "samplechart",
+  name: "AvgChangesPerQuestion",
   components: {
     BarChart,
   },
@@ -18,9 +19,9 @@ export default defineComponent({
     return {
       data: [],
       styling: {
-         text: "Avg Changed Per Question",
+         text: "Average Changes Per Question",
          labelStringX: "Questions",
-         labelStringY: "Time (seconds)",
+         labelStringY: "Number of Changes",
       }
     };
   },
@@ -29,24 +30,27 @@ export default defineComponent({
   },
   methods: {
     /**
-     * return some sort of an array- need two arrays- one for the labels and other for the average time
+     * Returns an array of labels for the chart followed by an array of corresponding
+     * data points that indicate the height of the bar for a specific label. The labels
+     * represent the names of the various questions on the graph and the values represent the
+     * number of times responses were changed for that question.
      */
     graphData() {
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
-
-      let groupedSubmissionQuestionTimes = this.reduceSubmissionQuestions(
+      let groupedSubmissionQuestionChanges = this.reduceSubmissionQuestions(
         groupedAuditData,
-        this.calculateQuestionTime
+        this.calculateQuestionChanges
       );
-      let submissionTimes = this.calculateAggregateSubmissionValues(
-        groupedSubmissionQuestionTimes
+
+      let averageQuestionChanges = this.calculateAverageQuestionValues(
+        groupedSubmissionQuestionChanges
       );
 
       let questionLabels = [];
       let avgAnswerTimes = [];
 
-      submissionTimes.forEach((user) => {
-        questionLabels.push(user["instance ID"]);
+      averageQuestionChanges.forEach((user) => {
+        questionLabels.push(user["node"]);
 
         avgAnswerTimes.push(user["value"].toFixed(2));
       });
@@ -70,6 +74,7 @@ export default defineComponent({
           questionResponses[node]++;
         }
       }
+
       let questionAverages = [];
       for (const node of Object.keys(questionAggregate)) {
         let entry = {};
@@ -79,34 +84,15 @@ export default defineComponent({
       }
       return questionAverages;
     },
-    calculateQuestionTime(events) {
-      let totalTime = 0;
+    calculateQuestionChanges(events) {
+      let totalChanges = 0;
       for (const event of events) {
-        if (event["end"] && event["start"]) {
-          totalTime += event["end"] - event["start"];
+        if (event["old-value"]) {
+          totalChanges++;
         }
       }
-      // convert time from ms to s
-      return totalTime / 1000;
-    },
-    calculateAggregateSubmissionValues(groupedSubmissionValues) {
-      let submissionAggregate = [];
 
-      for (const [instanceID, questions] of Object.entries(
-        groupedSubmissionValues
-      )) {
-        let entry = {};
-        entry["instance ID"] = instanceID;
-        entry["value"] = 0;
-
-        for (const [node, value] of Object.entries(questions)) {
-          entry["value"] += value;
-        }
-
-        submissionAggregate.push(entry);
-      }
-
-      return submissionAggregate;
+      return totalChanges;
     },
     reduceSubmissionQuestions(groupedData, fn) {
       let submissionTimes = {};

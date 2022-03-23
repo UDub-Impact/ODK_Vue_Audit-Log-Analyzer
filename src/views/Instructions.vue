@@ -1,4 +1,9 @@
 <template>
+<div class="outer-wrapper">
+  <nav>
+    <router-link to="/"><img id="back" src="../assets/back-button.png"></router-link>
+  </nav>
+</div>
   <h1>Instructions</h1>
   <section class="instructions">
     <section>
@@ -18,31 +23,34 @@
     <section>
        <img v-bind:src="csv_files"/>
        <p>
-       Unzip the downloaded folder and select the file labeled as audits. Make sure to
-       select the CSV containing the audit data rather than the CSV containg the actual
-       records from the form.
+        Unzip the downloaded folder and select the file labeled as audits. Make sure to
+        select the CSV containing the audit data rather than the CSV containg the actual
+        records from the form.
        </p>
   </section>
    </section>
-  <router-link to="/">Go Back To Home</router-link>
 </template>
 
 <script>
-    export default {
-       name: 'Instructions',
-       data: function() {
-          return {
-            login: require("../assets/login-page.png"),
-            csv_files: require("../assets/csv-in-files.png"),
-            download_records_button: require("../assets/download-records.png"),
-            select_all_media: require("../assets/select-all-media.png"),
-          }
-        }
+export default {
+  name: 'Instructions',
+    data: function() {
+      return {
+        login: require("../assets/login-page.png"),
+        csv_files: require("../assets/csv-in-files.png"),
+        download_records_button: require("../assets/download-records.png"),
+        select_all_media: require("../assets/select-all-media.png"),
+      }
     }
+}
 </script>
 
 <style>
-/* TODO: fix images resizing issue */
+nav {
+  text-align: center;
+  position: relative;
+}
+
 .instructions {
   display: flex;
   width: 95%;
@@ -50,7 +58,21 @@
   margin-left: auto;
   margin-right: auto;
   justify-content: center;
+}
+.outer-wrapper {
+  padding-right: 15px !important;
+}
 
+.outer-wrapper, #back {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1em;
+}
+
+#back {
+  height: 35px;
+  position: relative;
 }
 
 .instructions img  {

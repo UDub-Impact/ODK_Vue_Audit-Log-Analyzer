@@ -1,6 +1,8 @@
 <template>
-<div>
-<router-link to="/"><img src="../assets/back-button.png"></router-link>
+<div class="outer-wrapper">
+  <nav>
+    <router-link to="/"><img src="../assets/back-button.png"></router-link>
+  </nav>
 </div>
 <div>
   <h1>Summary Statistics</h1>
@@ -18,6 +20,7 @@
       <p>{{ getAvgFormSubmissionTime() }} s</p>
     </section>
   </article>
+
   <article>
     <select v-model="graphNum" id="graph-options">
       <option value="0">Choose a chart to display</option>
@@ -27,41 +30,47 @@
     </select>
   </article>
   <div class="graph" v-if="graphNum == 1">
-    <p>This bar chart shows the average time spent responding to each
+    <p>
+      This bar chart shows the average time spent responding to each
       question across submissions. This is the total time that the
       question has been selected across all submissions divided by the
-      number of submissions that selected the question.</p>
+      number of submissions that selected the question.
+    </p>
     <AvgTimePerQuestion />
   </div>
   <div class="graph" v-else-if="graphNum == 2">
-    <p>This bar chart shows the average number of times the
+    <p>
+      This bar chart shows the average number of times the
       response to each question is changed. This is the total
       number of times the response to this question was changed
       divided by the number of submissions that selected the question.
       When calculating the number of changes, the first entry
-      to a question isn't counted, only subsequent changes.</p>
+      to a question isn't counted, only subsequent changes.
+    </p>
     <AvgChangesPerQuestion :width="300" :height="150"/>
   </div>
   <div class="graph" v-else-if="graphNum == 3">
-    <p>This bar chart shows the total amount of time spent
+    <p>
+      This bar chart shows the total amount of time spent
       answering questions per submission. This metric only
-      includes time spent on a submission while selecting a question.</p>
-    <TimeSpentPerQuestion :width="300" :height="150"/>
+      includes time spent on a submission while selecting a question.
+    </p>
+    <TimeSpentPerSubmission :width="300" :height="150"/>
   </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import AvgChangesPerQuestion from "../components/AvgChangesPerQuestion";
-import TimeSpentPerQuestion from "../components/TimeSpentPerQuestion";
-import AvgTimePerQuestion from '../components/AvgTimePerQuestion.vue';
+import AvgChangesPerQuestion from "../components/metrics/AvgChangesPerQuestion";
+import TimeSpentPerSubmission from "../components/metrics/TimeSpentPerSubmission";
+import AvgTimePerQuestion from '../components/metrics/AvgTimePerQuestion.vue';
 
 export default {
   name: "Summary",
   components: {
     AvgChangesPerQuestion,
-    TimeSpentPerQuestion,
+    TimeSpentPerSubmission,
     AvgTimePerQuestion,
   },
   data() {
@@ -131,6 +140,17 @@ export default {
 </script>
 
 <style scoped>
+.outer-wrapper {
+  padding-right: 15px !important;
+}
+
+.outer-wrapper, img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1em;
+}
+
 section {
   background-color: #bc006b;
   color: white;
@@ -139,25 +159,28 @@ section {
   padding: 5px;
   overflow-wrap: break-word;
 }
+
 article {
   display: flex;
   margin: 20px auto 20px auto;
   justify-content: center;
 }
+
 select {
   width:50%;
   height:50px;
   font-size: 20px;
 }
+
 option {
   text-align: center;
   font-size:20px;
-   width:50%;
+  width:50%;
   height:50px;
 }
 
 img{
-  height: 30px;
+  height: 35px;
   position: relative;
 }
 
@@ -166,7 +189,7 @@ h2 {
 }
 
 h1{
-  margin-left: -10px;
+  margin: 0px;
 }
 
 p {
@@ -175,7 +198,16 @@ p {
   margin-left:auto;
   margin-right:auto;
   text-align:center;
-  width: 50%; /* whatever width you want */
+  width: 50%;
+}
+
+nav {
+  text-align: center;
+  position: relative;
+}
+
+div {
+  margin: 0px;
 }
 
 section p {
@@ -189,8 +221,7 @@ div > p {
   font-size: 20px;
 }
 
-
-
+/* adds fade-in effect to text */
 @keyframes fadeIn {
   0% {
     opacity: 0;

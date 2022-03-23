@@ -3,7 +3,7 @@
 </template>
 <script>
 import { defineComponent } from "vue";
-import BarChart from "./BarChart.vue";
+import BarChart from "../BarChart.vue";
 import { mapGetters } from "vuex";
 
 export default defineComponent({
@@ -18,9 +18,9 @@ export default defineComponent({
     return {
       data: [],
       styling: {
-         text: "Average Changes Per Question",
+         text: "Avg Changed Per Question",
          labelStringX: "Questions",
-         labelStringY: "Number of Changes",
+         labelStringY: "Time (seconds)",
       }
     };
   },
@@ -29,24 +29,27 @@ export default defineComponent({
   },
   methods: {
     /**
-     * return some sort of an array- need two arrays- one for the labels and other for the average time
+     * Returns an array of labels for the chart followed by an array of corresponding
+     * data points that indicate the height of the bar for a specific label. The labels
+     * represent the user ids of users that submitted a form response and the values represent the
+     * time it took users to fill out that form.
      */
     graphData() {
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
-      let groupedSubmissionQuestionChanges = this.reduceSubmissionQuestions(
-        groupedAuditData,
-        this.calculateQuestionChanges
-      );
 
-      let averageQuestionChanges = this.calculateAverageQuestionValues(
-        groupedSubmissionQuestionChanges
+      let groupedSubmissionQuestionTimes = this.reduceSubmissionQuestions(
+        groupedAuditData,
+        this.calculateQuestionTime
+      );
+      let submissionTimes = this.calculateAggregateSubmissionValues(
+        groupedSubmissionQuestionTimes
       );
 
       let questionLabels = [];
       let avgAnswerTimes = [];
 
-      averageQuestionChanges.forEach((user) => {
-        questionLabels.push(user["node"]);
+      submissionTimes.forEach((user) => {
+        questionLabels.push(user["instance ID"]);
 
         avgAnswerTimes.push(user["value"].toFixed(2));
       });
@@ -70,7 +73,6 @@ export default defineComponent({
           questionResponses[node]++;
         }
       }
-
       let questionAverages = [];
       for (const node of Object.keys(questionAggregate)) {
         let entry = {};
@@ -80,15 +82,34 @@ export default defineComponent({
       }
       return questionAverages;
     },
-    calculateQuestionChanges(events) {
-      let totalChanges = 0;
+    calculateQuestionTime(events) {
+      let totalTime = 0;
       for (const event of events) {
-        if (event["old-value"]) {
-          totalChanges++;
+        if (event["end"] && event["start"]) {
+          totalTime += event["end"] - event["start"];
         }
       }
+      // convert time from ms to s
+      return totalTime / 1000;
+    },
+    calculateAggregateSubmissionValues(groupedSubmissionValues) {
+      let submissionAggregate = [];
 
-      return totalChanges;
+      for (const [instanceID, questions] of Object.entries(
+        groupedSubmissionValues
+      )) {
+        let entry = {};
+        entry["instance ID"] = instanceID;
+        entry["value"] = 0;
+
+        for (const [node, value] of Object.entries(questions)) {
+          entry["value"] += value;
+        }
+
+        submissionAggregate.push(entry);
+      }
+
+      return submissionAggregate;
     },
     reduceSubmissionQuestions(groupedData, fn) {
       let submissionTimes = {};

@@ -5,14 +5,13 @@
   </select>
 
   <input id="filterLimit" placeholder="Filter Limit" /> <br /><br />
-  <button class="button" onClick="applyFilter(filterLimit)">
-    Apply Filter
-  </button>
+  <button class="button" onClick="applyFilter(filterLimit)">Apply Filter</button>
   <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
 </template>
+
 <script>
 import { mapGetters } from "vuex";
-import BarChart from "./BarChart.vue";
+import BarChart from "../BarChart.vue";
 export default {
   name: "AvgTimePerQuestion",
   components: {
@@ -36,7 +35,10 @@ export default {
   },
   methods: {
     /**
-     * return some sort of an array- need two arrays- one for the labels and other for the average time
+     * Returns an array of labels for the chart followed by an array of corresponding
+     * data points that indicate the height of the bar for a specific label. The labels
+     * represent the names of the questions on a form and the values represent the average
+     * time it took users to answer that question.
      */
     graphData() {
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
@@ -59,6 +61,7 @@ export default {
 
       return [questionLabels, avgAnswerTimes];
     },
+
     calculateAverageQuestionValues(groupedSubmissionValues) {
       let questionAggregate = {};
       let questionResponses = {};
@@ -97,6 +100,7 @@ export default {
       // convert time from ms to s
       return totalTime / 1000;
     },
+
     reduceSubmissionQuestions(groupedData, fn) {
       let submissionTimes = {};
       for (const [instanceID, questions] of Object.entries(groupedData)) {
@@ -108,6 +112,7 @@ export default {
       }
       return submissionTimes;
     },
+
     applyFilter(val) {
       let data = graphData();
       console.log(data);

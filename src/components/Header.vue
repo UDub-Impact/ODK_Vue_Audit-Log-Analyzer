@@ -22,6 +22,7 @@ header {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15pt;
 }
+
 img {
   width: 15%;
 }

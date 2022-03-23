@@ -8,6 +8,7 @@ export default defineComponent({
     data: [],
     stylingLabels: {}
   },
+  extends: Bar,
   data() {
     return {
       options: {
@@ -17,7 +18,6 @@ export default defineComponent({
           display: true,
           fontSize: 24,
         },
-        aspectRatio: 4,
         scales: {
           yAxes: [
             {
@@ -43,12 +43,7 @@ export default defineComponent({
       },
     };
   },
-
-  extends: Bar,
-
   mounted() {
-    console.log("inside mounted for inner file");
-    console.log(this.data);
     // Overwriting base render method with actual data.
     this.renderChart({
       labels: this.data[0],

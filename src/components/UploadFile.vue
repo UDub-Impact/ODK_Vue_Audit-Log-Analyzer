@@ -17,7 +17,9 @@ export default {
     }
   },
   methods: {
-    // parse CSV file
+    /**
+     * Parse and group CSV Data, and store the data to the globa state.
+     */
     processData(e) {
       this.file = e.target.files[0];
       let fileReader = new FileReader();
@@ -25,23 +27,24 @@ export default {
       fileReader.onload = (readerEvent) => {
         let auditStr = readerEvent.target.result;
         let auditData = d3.csvParse(auditStr);
-        //this.$emit('uploaded-file', auditData);
 
-        // format data by grouping it by instanceID
-        let groupedAuditData = this.groupAuditData(auditData);
-        let groupedSubmissionTimes = this.reduceSubmissionQuestions(
-          groupedAuditData,
-          this.calculateQuestionTime
-        );
+        // check that file has necessary columns 
+        let columns = Object.keys(auditData[0]);
+        if (!columns.includes("instance ID") || !columns.includes("event") || !columns.includes("node")) {
+          this.$emit("error", "ERROR: File is missing crucial metadata such as columns named 'instance ID', 'event', or 'node'");
+        } else if (!columns.includes("start") || !columns.includes("end")) {
+          this.$emit("error", "ERROR: File is missing columns named 'start' and/or 'end'.");
+        } else if (!columns.includes("old-value") || !columns.includes("new-value")) {
+          this.$emit("error", "ERROR: File is missing columns named 'old-value' and/or 'new-value'.");
+        } else {
+          // indicate that no errors were found
+          this.$emit("error", "");
+          // format data by grouping it by instanceID
+          let groupedAuditData = this.groupAuditData(auditData);
 
-        this.$store.commit('setFile', groupedAuditData);
-        console.log(groupedSubmissionTimes);
-        // dictionary that maps each question to the average time it took to answer that question
-        let averageQuestionTimes = this.calculateAverageQuestionValues(
-          groupedSubmissionTimes
-        );
-        console.log(e.target.files);
-      };
+          this.$store.commit('setFile', groupedAuditData);
+        };
+      }
     },
 
     calculateAverageQuestionValues(groupedSubmissionValues) {
@@ -78,12 +81,13 @@ export default {
           totalTime += event["end"] - event["start"];
         }
       }
-
       // convert time from ms to s
       return totalTime / 1000;
     },
 
-    /* groups audit data by instanceID and node */
+    /**
+     * Groups audit data by instanceID and node
+     */
     groupAuditData(auditData) {
       let groupedData = {};
       for (const event of auditData) {
@@ -100,11 +104,9 @@ export default {
           if (!(instanceID in groupedData)) {
             groupedData[instanceID] = {};
           }
-
           if (!(node in groupedData[instanceID])) {
             groupedData[instanceID][node] = [];
           }
-
           groupedData[instanceID][node].push(event);
         }
       }
@@ -125,6 +127,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>

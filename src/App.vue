@@ -4,7 +4,6 @@
       <router-view ></router-view>
       <Footer />
   </div>
-
 </template>
 
 <script>
@@ -27,10 +26,12 @@ export default {
   margin: 10px;
   padding: 0;
 }
+
 body {
   font-family: 'Poppins', sans-serif;
   text-align: center;
 }
+
 .btn {
   display: inline-block;
   background: #000;
@@ -44,12 +45,15 @@ body {
   font-size: 15px;
   font-family: inherit;
 }
+
 .btn:focus {
   outline: none;
 }
+
 .btn:active {
   transform: scale(0.98);
 }
+
 .btn-block {
   display: block;
   width: 100%;
