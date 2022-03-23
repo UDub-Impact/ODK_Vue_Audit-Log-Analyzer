@@ -5,10 +5,29 @@ import { Bar } from "vue3-chart-v2";
 export default defineComponent({
   name: "BarChart",
   props: {
-    data: [],
+    data: [Array],
     stylingLabels: {}
   },
+  watch: {
+    data: function() {
+      this.update();
+    }
+  },
   extends: Bar,
+  methods: {
+    update() {
+      this.renderChart({
+      labels: this.data[0],
+      datasets: [
+        {
+          label: "Average Time (s)",
+          backgroundColor: "#f87979",
+          data:this.data[1],
+        },
+      ],
+    }, this.options);
+    }
+  },
   data() {
     return {
       options: {
@@ -21,6 +40,9 @@ export default defineComponent({
         scales: {
           yAxes: [
             {
+              ticks: {
+                suggestedMin: Math.min(...this.data[1])-0.5
+            },
               scaleLabel: {
                 display: true,
                 labelString: this.stylingLabels.labelStringY,
@@ -44,17 +66,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    // Overwriting base render method with actual data.
-    this.renderChart({
-      labels: this.data[0],
-      datasets: [
-        {
-          label: "Average Time (s)",
-          backgroundColor: "#f87979",
-          data:this.data[1],
-        },
-      ],
-    }, this.options);
-  },
+    this.update();
+  }
 });
 </script>
