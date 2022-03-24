@@ -21,7 +21,7 @@ export default defineComponent({
       datasets: [
         {
           label: "Average Time (s)",
-          backgroundColor: "#f87979",
+          backgroundColor: "#bc006b",
           data:this.data[1],
         },
       ],
@@ -31,7 +31,7 @@ export default defineComponent({
   data() {
     return {
       options: {
-        responsive: true,
+        maintainAspectRatio: true,
         title: {
           text: this.stylingLabels.text,
           display: true,

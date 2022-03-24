@@ -84,7 +84,6 @@ export default {
   methods: {
     getGroupedAuditData() {
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
-      console.log(groupedAuditData);
       let groupedSubmissionTimes = this.reduceSubmissionQuestions(
         groupedAuditData,
         this.calculateQuestionTime
@@ -123,7 +122,6 @@ export default {
     },
     getAvgFormSubmissionTime() {
       let groupedSubmissionTimes = this.getGroupedAuditData();
-      console.log(groupedSubmissionTimes);
       let uids = Object.keys(groupedSubmissionTimes);
       let totalTimeAllUsers = 0;
       uids.forEach((user) => {

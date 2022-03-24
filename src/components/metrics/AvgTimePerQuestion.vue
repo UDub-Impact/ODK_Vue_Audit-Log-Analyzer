@@ -1,5 +1,5 @@
 <template>
-<form @change="updateGraph">
+<form v-if="this.allData[0].length > 15" @change="updateGraph">
   <h1>Filtering: </h1>
   <label>
     <input type="radio" name="filtering" value="smallest">
@@ -11,7 +11,7 @@
   </label>
   <label>
     <input checked type="radio" name="filtering" value="mix">
-      Smallest 5 and Largest 5 Entries
+      Smallest 10 and Largest 10 Entries
   </label>
   </form>
   <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
@@ -20,6 +20,8 @@
 <script>
 import { mapGetters } from "vuex";
 import BarChart from "../BarChart.vue";
+const GRAPH_SIZE = 15;
+
 export default {
   name: "AvgTimePerQuestion",
   components: {
@@ -45,20 +47,19 @@ export default {
   },
   methods: {
     updateGraph() {
-      console.log(this.allData[0].length);
       let labels = this.allData[0];
       let values = this.allData[1]
       let options = document.querySelector("input:checked").value;
       let size = values.length;
       if (options==="smallest") {
-        labels = labels.slice(0, 3);
-        values = values.slice(0, 3);
+        labels = labels.slice(0, 10);
+        values = values.slice(0, 10);
       } else if (options==="largest") {
-        labels = labels.slice(values.length - 3, size);
-        values = values.slice(values.length - 3, size);
+        labels = labels.slice(values.length - 10, size);
+        values = values.slice(values.length - 10, size);
       } else {
-        labels = [].concat(labels.slice(0,3), labels.slice(size-3, size));
-        values = [].concat(values.slice(0,3), values.slice(size-3, size));
+        labels = [].concat(labels.slice(0,10), labels.slice(size-10, size));
+        values = [].concat(values.slice(0,10), values.slice(size-10, size));
       }
       this.data = [labels, values];
     },
@@ -79,6 +80,11 @@ export default {
         groupedSubmissionTimes
       );
 
+      // sort values/label pairs in ascending order
+      averageQuestionTimes.sort(function(a, b) {
+        return a.value - b.value;
+      });
+
       let questionLabels = [];
       let avgAnswerTimes = [];
 
@@ -89,9 +95,9 @@ export default {
       });
 
       let size = avgAnswerTimes.length;
-      if (size > 5) {
-        questionLabels = [].concat(questionLabels.slice(0,3), questionLabels.slice(size-3, size));
-        avgAnswerTimes = [].concat(avgAnswerTimes.slice(0, 3), avgAnswerTimes.slice(size-3, size));
+      if (size > 15) {
+        questionLabels = [].concat(questionLabels.slice(0,10), questionLabels.slice(size-10, size));
+        avgAnswerTimes = [].concat(avgAnswerTimes.slice(0, 10), avgAnswerTimes.slice(size-10, size));
       }
 
       return [questionLabels, avgAnswerTimes];
@@ -150,7 +156,6 @@ export default {
 
     applyFilter(val) {
       let data = graphData();
-      console.log(data);
     },
   },
 };
