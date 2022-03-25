@@ -33,7 +33,7 @@ export default defineComponent({
       options: {
         maintainAspectRatio: true,
         title: {
-          text: this.stylingLabels.text,
+          text: this.stylingLabels["text"],
           display: true,
           fontSize: 24,
         },
@@ -66,6 +66,7 @@ export default defineComponent({
     };
   },
   mounted() {
+    console.log(this.stylingLabels)
     this.update();
   }
 });

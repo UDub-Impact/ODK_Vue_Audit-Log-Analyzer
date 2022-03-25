@@ -1,6 +1,7 @@
 <template>
   <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
 </template>
+
 <script>
 import { defineComponent } from "vue";
 import BarChart from "../BarChart.vue";

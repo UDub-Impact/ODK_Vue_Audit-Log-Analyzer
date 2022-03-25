@@ -1,5 +1,5 @@
 <template>
-  <BarChart :data=this.data :stylingLabels=this.styling5></BarChart>
+  <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
 </template>
 
 <script>
