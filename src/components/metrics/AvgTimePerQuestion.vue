@@ -1,12 +1,20 @@
 <template>
-  <select id="graph-filter">
+  <!-- <select id="graph-filter">
     <option value="lessThan">Less Than</option>
     <option value="greaterThan">Greater Than</option>
   </select>
   <input id="filterLimit" placeholder="Filter Limit" /> <br /><br />
-  <button class="button" @click="applyFilter()">Apply Filter</button>
+  <button class="button" @click="applyFilter()">Apply Filter</button> -->
   <form v-if="this.allData[0].length > 10" @change="updateGraph">
     <h1>Filtering:</h1>
+    <div>
+      <select id="graph-filter">
+        <option value="lessThan">Less Than</option>
+        <option value="greaterThan">Greater Than</option>
+      </select>
+      <input id="filterLimit" placeholder="Filter Limit" />
+      <button class="button" @click="applyFilter()">Apply Filter</button>
+    </div>
     <label>
       <input type="radio" name="filtering" value="smallest" />
       Smallest 5 Entries
@@ -19,6 +27,8 @@
       <input checked type="radio" name="filtering" value="mix" />
       Smallest 5 and Largest 5 Entries
     </label>
+    
+
   </form>
   <div style="height : 30vw; width: 30vw;">
     <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
