@@ -1,11 +1,5 @@
 <template>
-  <select id="graph-filter">
-    <option value="lessThan">Less Than</option>
-    <option value="greaterThan">Greater Than</option>
-  </select>
-  <input id="filterLimit" placeholder="Filter Limit" /> <br /><br />
-  <button class="button" @click="applyFilter()">Apply Filter</button>
-  <form v-if="this.allData[0].length > 10" @change="updateGraph">
+  <article v-if="this.allData[0].length > 10" @change="updateGraph">
     <h1>Filtering:</h1>
     <label>
       <input type="radio" name="filtering" value="smallest" />
@@ -19,7 +13,15 @@
       <input checked type="radio" name="filtering" value="mix" />
       Smallest 5 and Largest 5 Entries
     </label>
-  </form>
+    <div>
+      <select id="graph-filter">
+        <option value="lessThan">Less Than</option>
+        <option value="greaterThan">Greater Than</option>
+      </select>
+      <input id="filterLimit" placeholder="Filter Limit" />
+      <button class="button" @click="applyFilter()">Apply Filter</button>
+    </div>
+  </article>
   <div style="height : 30vw; width: 30vw;">
     <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
   </div>
@@ -223,14 +225,14 @@ export default {
 
 <style scoped>
 h1 {
-  font-size: 12px;
+  font-size: 1px;
   font-weight: bold;
   font-style: italic;
   margin-bottom: 0px;
   display: inline;
 }
 
-form {
+article {
   margin-top: 50px;
   border: 3px solid black;
 }
