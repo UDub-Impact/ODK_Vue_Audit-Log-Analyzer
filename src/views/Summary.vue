@@ -152,7 +152,7 @@ export default {
 section {
   background-color: #bc006b;
   color: white;
-  width: 30%;
+  width: 20%;
   border-radius: 20px;
   padding: 5px;
   overflow-wrap: break-word;
@@ -166,8 +166,8 @@ article {
 
 select {
   width:50%;
-  height:50px;
-  font-size: 20px;
+  height:20px;
+  font-size: 12px;
 }
 
 option {
@@ -183,11 +183,12 @@ img{
 }
 
 h2 {
-  font-size: 15pt;
+  font-size: 10pt;
 }
 
 h1{
   margin: 0px;
+  font-size: 25px;
 }
 
 p {
@@ -210,13 +211,13 @@ div {
 
 section p {
   display: inline-block;
-  font-size: 40pt;
+  font-size: 20pt;
   font-style: bold;
   animation: fadeIn linear 3s;
 }
 
 div > p {
-  font-size: 20px;
+  font-size: 12px;
 }
 
 /* adds fade-in effect to text */

@@ -14,7 +14,9 @@
       Smallest 5 and Largest 5 Entries
   </label>
   </form>
-  <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+  <div style="height : 30vw; width: 30vw;">
+    <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+  </div>
 </template>
 
 <script>
@@ -168,7 +170,7 @@ export default {
 
 <style scoped>
 h1 {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: bold;
   font-style: italic;
   margin-bottom: 0px;
@@ -179,4 +181,17 @@ form {
   margin-top: 50px;
   border: 3px solid black
 }
+
+div {
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+label {
+  font-size: 12px;
+}
+
+
 </style>

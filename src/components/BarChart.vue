@@ -71,3 +71,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+canvas {
+  width: 700px;
+}
+</style>
