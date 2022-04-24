@@ -159,8 +159,6 @@ export default {
      */
     getFirstKey() {
       let keyString = Object.keys(this.file)[0] + "";
-      console.log(this.file);
-      console.log("keyString " + keyString);
       return keyString;
     },
 

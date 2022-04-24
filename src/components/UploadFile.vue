@@ -18,7 +18,10 @@ export default {
   },
   methods: {
     /**
-     * Parse and group CSV Data, and store the data to the globa state.
+     * Parse and group CSV Data, and store the data to the global state. Ensure
+     * that the CSV has the necessary columns for computing the analytics. If
+     * any of the necessary columns are not found, send back an appropriate
+     * error message.
      */
     processData(e) {
       this.file = e.target.files[0];
@@ -39,6 +42,7 @@ export default {
         } else {
           // indicate that no errors were found
           this.$emit("error", "");
+
           // format data by grouping it by instanceID
           let groupedAuditData = this.groupAuditData(auditData);
 
@@ -47,6 +51,12 @@ export default {
       }
     },
 
+    /**
+     * Takes submission data in the format returned by reduceSubmissionQuestions
+     * Returns a list of dictionaries s.t. each dictionary maps "node" to
+     * question name and "value" to the average value of that question across
+     * all submissions
+     */
     calculateAverageQuestionValues(groupedSubmissionValues) {
       let questionAggregate = {};
       let questionResponses = {};
@@ -74,6 +84,10 @@ export default {
       return questionAverages;
     },
 
+    /**
+     * Takes a list of events corresponding to a single question in one
+     * submission. Returns the total response time for the question in seconds.
+     */
     calculateQuestionTime(events) {
       let totalTime = 0;
       for (const event of events) {
@@ -86,7 +100,7 @@ export default {
     },
 
     /**
-     * Groups audit data by instanceID and node
+     * Groups audit data by instanceID and by node.
      */
     groupAuditData(auditData) {
       let groupedData = {};
@@ -113,6 +127,18 @@ export default {
       return groupedData;
     },
 
+    /**
+     * Takes grouped audit dictionary returned by groupAuditData
+     * Returns a grouped dictionary of the same format s.t. each question is mapped to the result of calling fn on its list of events
+     * eg.  {
+     *      "instanceID1":
+  	 *	      {
+  	 *          "question1": fn(events_list1)
+  	 *          "question2": fn(events_list2),
+  	 *        },
+ 	   *        "instanceID2": {...},
+     *      }
+     */
     reduceSubmissionQuestions(groupedData, fn) {
       let submissionTimes = {};
       for (const [instanceID, questions] of Object.entries(groupedData)) {
