@@ -6,20 +6,25 @@
 </div>
   <h1>Instructions</h1>
   <section class="instructions">
+    <!--Step 1-->
     <section>
       <img v-bind:src="login"/>
       <p>Login to<a href="https://sandbox.getodk.cloud">https://sandbox.getodk.cloud</a></p>
     </section>
 
+    <!--Step 2-->
     <section>
      <img v-bind:src="download_records_button"/>
      <p>Select the desired form, and click on the blue 'Download Records' button.</p>
     </section>
 
+    <!--Step 3-->
     <section>
       <img v-bind:src="select_all_media"/>
       <p>In order to get the CSV containg the audit data, select 'All data and media files'.</p>
     </section>
+
+    <!--Step 4-->
     <section>
        <img v-bind:src="csv_files"/>
        <p>
@@ -27,8 +32,8 @@
         select the CSV containing the audit data rather than the CSV containg the actual
         records from the form.
        </p>
+    </section>
   </section>
-   </section>
 </template>
 
 <script>

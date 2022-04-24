@@ -221,6 +221,7 @@ export default {
         this.filtData = [filteredQ, filteredResp];
         //if (filData)
       }
+      this.updateGraph();
     },
     getFilterLimit() {
       // Selecting the input element and get its value
