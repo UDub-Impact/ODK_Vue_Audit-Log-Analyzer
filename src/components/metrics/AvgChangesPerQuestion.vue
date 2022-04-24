@@ -1,5 +1,7 @@
 <template>
+<!-- This is the html set up for AvgChangesPerQuestion graph page -->
 <article >
+  <!-- The Filtering and Sorting selections can happen here -->
     <div>
       <h1>Filtering & Sorting:</h1>
       <select id="graph-filter">
@@ -9,7 +11,7 @@
       <input id="filterLimit" placeholder="Filter Limit" />
       <button class="button" @click="applyFilter()">Apply Filter</button>
     </div>
-
+    <!-- The following section will not show up if already filtered data has length less than 10 -->
     <section v-if="this.filtData[0].length >= 10 && !this.filtData[1].every((v) => parseInt(v) === 0)" @change="updateGraph">
       <label>
         <input type="radio" name="filtering" value="smallest" />
@@ -24,8 +26,11 @@
         Smallest 5 and Largest 5 Entries
       </label>
     </section>
+    <button class="button" @click="clearFilter()">Clear Filters</button>
   </article>
-  <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+  <div style="height: 30vw; width: 30vw">
+    <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+  </div>
 </template>
 
 <script>
@@ -53,13 +58,18 @@ export default defineComponent({
       }
     };
   },
+  /**
+   * This method creates the 3 arrays that are updata as the user interacts with this page
+   */
   created() {
     this.allData = this.graphData();
     this.filtData = this.graphData();
-    console.log(this.filtData);
     this.data = this.filteredData();
   },
   methods: {
+    /**
+     * 
+     */
      updateGraph() {
       let labels = this.filtData[0];
       let values = this.filtData[1];
@@ -76,6 +86,12 @@ export default defineComponent({
         values = [].concat(values.slice(0, 5), values.slice(size - 5, size));
       }
       this.data = [labels, values];
+    },
+    clearFilter() {
+      this.allData = this.graphData();
+      this.filtData = this.graphData();
+      this.data = this.filteredData();
+      document.getElementById("filterLimit").value = "";
     },
     filteredData() {
       let questionLabels = [...this.allData[0]];
