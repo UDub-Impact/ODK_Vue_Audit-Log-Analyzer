@@ -1,13 +1,7 @@
 <template>
-  <!-- <select id="graph-filter">
-    <option value="lessThan">Less Than</option>
-    <option value="greaterThan">Greater Than</option>
-  </select>
-  <input id="filterLimit" placeholder="Filter Limit" /> <br /><br />
-  <button class="button" @click="applyFilter()">Apply Filter</button> -->
-  <form v-if="this.allData[0].length > 10" @change="updateGraph">
-    <h1>Filtering:</h1>
+  <article>
     <div>
+      <h1>Filtering & Sorting:</h1>
       <select id="graph-filter">
         <option value="lessThan">Less Than</option>
         <option value="greaterThan">Greater Than</option>
@@ -15,23 +9,25 @@
       <input id="filterLimit" placeholder="Filter Limit" />
       <button class="button" @click="applyFilter()">Apply Filter</button>
     </div>
-    <label>
-      <input type="radio" name="filtering" value="smallest" />
-      Smallest 5 Entries
-    </label>
-    <label>
-      <input type="radio" name="filtering" value="largest" />
-      Highest 5 Entries
-    </label>
-    <label>
-      <input checked type="radio" name="filtering" value="mix" />
-      Smallest 5 and Largest 5 Entries
-    </label>
-    
 
-  </form>
-  <div style="height : 30vw; width: 30vw;">
-    <BarChart :data=this.data :stylingLabels=this.styling></BarChart>
+    <section v-if="this.filtData[0].length >= 10 && !this.filtData[1].every((v) => parseInt(v) === 0)"
+      @change="updateGraph">
+      <label>
+        <input type="radio" name="filtering" value="smallest" />
+        Smallest 5 Entries
+      </label>
+      <label>
+        <input type="radio" name="filtering" value="largest" />
+        Highest 5 Entries
+      </label>
+      <label>
+        <input checked type="radio" name="filtering" value="mix" />
+        Smallest 5 and Largest 5 Entries
+      </label>
+    </section>
+  </article>
+  <div style="height: 30vw; width: 30vw">
+    <BarChart :data="this.data" :stylingLabels="this.styling"></BarChart>
   </div>
 </template>
 
@@ -52,6 +48,7 @@ export default {
     return {
       data: [[], []],
       allData: [[], []],
+      filtData: [[], []],
       styling: {
         text: "Average Time Spent Per Question",
         labelStringX: "Questions",
@@ -61,12 +58,13 @@ export default {
   },
   created() {
     this.allData = this.graphData();
+    this.filtData = this.graphData();
     this.data = this.filteredData();
   },
   methods: {
     updateGraph() {
-      let labels = this.allData[0];
-      let values = this.allData[1];
+      let labels = this.filtData[0];
+      let values = this.filtData[1];
       let options = document.querySelector("input:checked").value;
       let size = values.length;
       if (options === "smallest") {
@@ -111,6 +109,7 @@ export default {
 
         avgAnswerTimes.push(user["value"].toFixed(2));
       });
+
 
       return [questionLabels, avgAnswerTimes];
     },
@@ -191,7 +190,7 @@ export default {
       let questionLabels = [...this.allData[0]];
       let avgAnswerTimes = [...this.allData[1]];
 
-      let isLessThan = (filterOption === "lessThan");
+      let isLessThan = filterOption === "lessThan";
       let filteredQ = [];
       let filteredResp = [];
 
@@ -205,8 +204,8 @@ export default {
           //console.log(avgAnswerTimes[i] + " - " + questionLabels[i]);
           if (avgAnswerTimes[i] < filterLimit) {
             // include that question and label
-             filteredQ.push(questionLabels[i]);
-             filteredResp.push(avgAnswerTimes[i]);
+            filteredQ.push(questionLabels[i]);
+            filteredResp.push(avgAnswerTimes[i]);
           }
         } else {
           //console.log(avgAnswerTimes[i] + " - " + questionLabels[i]);
@@ -219,6 +218,8 @@ export default {
         //console.log(filteredResp);
         //let data = this.graphData();
         this.data = [filteredQ, filteredResp];
+        this.filtData = [filteredQ, filteredResp];
+        //if (filData)
       }
     },
     getFilterLimit() {
@@ -233,14 +234,14 @@ export default {
 
 <style scoped>
 h1 {
-  font-size: 12px;
+  font-size: 15px;
   font-weight: bold;
   font-style: italic;
   margin-bottom: 0px;
   display: inline;
 }
 
-form {
+article {
   margin-top: 50px;
   border: 3px solid black;
 }
@@ -255,6 +256,4 @@ div {
 label {
   font-size: 12px;
 }
-
-
 </style>
