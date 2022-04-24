@@ -27,8 +27,11 @@
         Smallest 5 and Largest 5 Entries
       </label>
     </section>
+    <button class="button" @click="clearFilter()">Clear Filters</button>
   </article>
-  <BarChart :data="this.data" :stylingLabels="this.styling"></BarChart>
+  <div style="height: 30vw; width: 30vw">
+    <BarChart :data="this.data" :stylingLabels="this.styling"></BarChart>
+  </div>
 </template>
 
 <script>
@@ -145,6 +148,13 @@ export default defineComponent({
         );
       }
       return [questionLabels, avgAnswerTimes];
+    },
+    clearFilter() {
+      this.allData = this.graphData();
+      this.filtData = this.graphData();
+      this.data = this.filteredData();
+      // var inputF = document.getElementById("id1");
+      document.getElementById("filterLimit").value = "";
     },
     graphData() {
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
