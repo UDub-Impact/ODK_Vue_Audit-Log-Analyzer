@@ -1,5 +1,7 @@
 <template>
+<!-- This is the html set up for AvgChangesPerQuestion graph page -->
   <article>
+    <!-- The Filtering and Sorting selections can happen here -->
     <div>
       <h1>Filtering & Sorting:</h1>
       <select id="graph-filter">
@@ -45,6 +47,9 @@ export default {
   computed: {
     ...mapGetters({ file: "getData" }),
   },
+    /**
+   * Creates the 3 arrays and syling fields for the component
+   */
   data() {
     return {
       data: [[], []],
@@ -57,12 +62,18 @@ export default {
       },
     };
   },
+  /**
+   * This method creates the 3 arrays that are updated as the user interacts with this page
+   */
   created() {
     this.allData = this.graphData();
     this.filtData = this.graphData();
     this.data = this.filteredData();
   },
   methods: {
+    /**
+     * Sets the data displayed in the graphs to filtered data
+     */
     updateGraph() {
       let labels = this.filtData[0];
       let values = this.filtData[1];
@@ -114,7 +125,9 @@ export default {
 
       return [questionLabels, avgAnswerTimes];
     },
-
+    /**
+     * If data is greater than 10 in length only displays least 5 and greates 5 entries
+     */
     filteredData() {
       let questionLabels = [...this.allData[0]];
       let avgAnswerTimes = [...this.allData[1]];
@@ -132,6 +145,11 @@ export default {
       return [questionLabels, avgAnswerTimes];
     },
 
+    /**
+     * Takes submission data in the format returned by reduceSubmissionQuestions
+     * Returns a list of dictionaries s.t. each dictionary maps "node" to question name and "value" to the average value of that question
+     * across all submissions
+     */
     calculateAverageQuestionValues(groupedSubmissionValues) {
       let questionAggregate = {};
       let questionResponses = {};
@@ -160,6 +178,10 @@ export default {
       return questionAverages;
     },
 
+    /**
+     * Takes a list of events corresponding to a single question in one submission
+     * Returns the total response time for the question in seconds
+     */
     calculateQuestionTime(events) {
       let totalTime = 0;
       for (const event of events) {
@@ -171,6 +193,18 @@ export default {
       return totalTime / 1000;
     },
 
+        /**
+     * Takes grouped audit dictionary returned by groupAuditData
+     * Returns a grouped dictionary of the same format s.t. each question is mapped to the result of calling fn on its list of events
+     * eg.  {
+     *      "instanceID1":
+     *      {
+     *        "question1": fn(events_list1)
+     *        "question2": fn(events_list2),
+     *       },
+     *      "instanceID2": {...},
+     *      }
+     */
     reduceSubmissionQuestions(groupedData, fn) {
       let submissionTimes = {};
       for (const [instanceID, questions] of Object.entries(groupedData)) {
@@ -182,7 +216,9 @@ export default {
       }
       return submissionTimes;
     },
-
+    /**
+     * Applies the selected filter (greater/less than) with the input filter limit
+     */
     applyFilter() {
       // check that filterLimit is a number
       let filterLimit = parseInt(this.getFilterLimit());
@@ -195,10 +231,6 @@ export default {
       let filteredQ = [];
       let filteredResp = [];
 
-      console.log("questions");
-      console.log(questionLabels);
-      console.log("answers");
-      console.log(avgAnswerTimes);
       // check that question and avgAnswer lengths match
       for (let i = 0; i < questionLabels.length; i++) {
         if (isLessThan) {
@@ -215,13 +247,14 @@ export default {
             filteredResp.push(avgAnswerTimes[i]);
           }
         }
-        //console.log(filteredQ);
-        //console.log(filteredResp);
-        //let data = this.graphData();
+        
         this.data = [filteredQ, filteredResp];
         this.filtData = [filteredQ, filteredResp];
-        //if (filData)
       }
+      if (this.filtData[0].length > 10){
+        this.updateGraph();
+      }
+      
     },
     getFilterLimit() {
       // Selecting the input element and get its value
@@ -229,7 +262,9 @@ export default {
       // Displaying the value
       return inputVal;
     },
-
+    /**
+     * Clears all existing filters
+     */
     clearFilter() {
       this.allData = this.graphData();
       this.filtData = this.graphData();

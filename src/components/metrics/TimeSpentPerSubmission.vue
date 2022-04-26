@@ -1,5 +1,7 @@
 <template>
+<!-- This is the html set up for TimeSpentPerSubmission graph page -->
   <article>
+    <!-- The Filtering and Sorting selections can happen here -->
     <div>
       <h1>Filtering & Sorting:</h1>
       <select id="graph-filter">
@@ -9,7 +11,7 @@
       <input id="filterLimit" placeholder="Filter Limit" />
       <button class="button" @click="applyFilter()">Apply Filter</button>
     </div>
-
+    <!-- The following section will not show up if already filtered data has length less than 10 -->
     <section
       v-if="this.filtData[0].length >= 10 && !this.filtData[1].every((v) => parseInt(v) === 0)"
       @change="updateGraph"
@@ -29,6 +31,7 @@
     </section>
     <button class="button" @click="clearFilter()">Clear Filters</button>
   </article>
+   <!-- The chart component is resized and displayed here -->
   <div style="height: 30vw; width: 30vw">
     <BarChart :data="this.data" :stylingLabels="this.styling"></BarChart>
   </div>
@@ -47,6 +50,9 @@ export default defineComponent({
   computed: {
     ...mapGetters({ file: "getData" }),
   },
+    /**
+   * Creates the 3 arrays and syling fields for the component
+   */
   data() {
     return {
       data: [[], []],
@@ -59,6 +65,9 @@ export default defineComponent({
       },
     };
   },
+   /**
+   * This method sets the 3 arrays that are updated as the user interacts with this page
+   */
   created() {
     this.allData = this.graphData();
     this.filtData = this.graphData();
@@ -87,6 +96,9 @@ export default defineComponent({
       }
       this.data = [labels, values];
     },
+    /**
+     * Sets and updates chart data with appropiate filtering and sorting selection
+     */
     applyFilter() {
       // check that filterLimit is a number
       let filterLimit = parseInt(this.getFilterLimit());
@@ -98,11 +110,6 @@ export default defineComponent({
       let isLessThan = filterOption === "lessThan";
       let filteredQ = [];
       let filteredResp = [];
-
-      console.log("questions");
-      console.log(questionLabels);
-      console.log("answers");
-      console.log(avgAnswerTimes);
       // check that question and avgAnswer lengths match
       for (let i = 0; i < questionLabels.length; i++) {
         if (isLessThan) {
@@ -126,6 +133,7 @@ export default defineComponent({
         this.filtData = [filteredQ, filteredResp];
         //if (filData)
       }
+      this.updateGraph();
     },
     getFilterLimit() {
       // Selecting the input element and get its value
@@ -133,6 +141,10 @@ export default defineComponent({
       // Displaying the value
       return inputVal;
     },
+    /**
+     * If data is greater than 10 in length only displays least 5 and greates 5 entries.
+     * Returns an array of question lables and datapoints.
+     */
     filteredData() {
       let questionLabels = [...this.allData[0]];
       let avgAnswerTimes = [...this.allData[1]];
@@ -149,6 +161,9 @@ export default defineComponent({
       }
       return [questionLabels, avgAnswerTimes];
     },
+    /**
+     * Clears all existing filters
+     */
     clearFilter() {
       this.allData = this.graphData();
       this.filtData = this.graphData();
@@ -156,6 +171,12 @@ export default defineComponent({
       // var inputF = document.getElementById("id1");
       document.getElementById("filterLimit").value = "";
     },
+    /**
+     * Returns an array of labels for the chart followed by an array of corresponding
+     * data points that indicate the height of the bar for a specific label. The labels
+     * represent the names of the various questions on the graph and the values represent the
+     * number of times responses were changed for that question.
+     */
     graphData() {
       const groupedAuditData = JSON.parse(JSON.stringify(this.file));
 
@@ -178,6 +199,11 @@ export default defineComponent({
 
       return [questionLabels, avgAnswerTimes];
     },
+    /**
+     * Takes submission data in the format returned by reduceSubmissionQuestions
+     * Returns a list of dictionaries s.t. each dictionary maps "node" to question name and "value" to the average value of that question
+     * across all submissions
+     */
     calculateAverageQuestionValues(groupedSubmissionValues) {
       let questionAggregate = {};
       let questionResponses = {};
@@ -204,6 +230,12 @@ export default defineComponent({
       }
       return questionAverages;
     },
+    /**
+     * Takes a list of events corresponding to a single question in one submission
+     * Returns the total number of times the response to this question is change.
+     * This count doesn't include when the question is initially filled out.
+     * Corresponds to the number of entries with a non-null "old-value" field
+     */
     calculateQuestionTime(events) {
       let totalTime = 0;
       for (const event of events) {
@@ -214,6 +246,11 @@ export default defineComponent({
       // convert time from ms to s
       return totalTime / 1000;
     },
+    /**
+     * Takes submission data in the format returned by reduceSubmissionQuestions
+     * Returns a list of dictionaries s.t. each dictionary maps "instanceID" to a submission's instanceID and "value" to the aggregate value of all 
+     * questions for that submission
+     */
     calculateAggregateSubmissionValues(groupedSubmissionValues) {
       let submissionAggregate = [];
 
@@ -233,6 +270,18 @@ export default defineComponent({
 
       return submissionAggregate;
     },
+    /**
+     * Takes grouped audit dictionary returned by groupAuditData
+     * Returns a grouped dictionary of the same format s.t. each question is mapped to the result of calling fn on its list of events
+     * eg.  {
+     *      "instanceID1":
+     *      {
+     *        "question1": fn(events_list1)
+     *        "question2": fn(events_list2),
+     *       },
+     *      "instanceID2": {...},
+     *      }
+     */
     reduceSubmissionQuestions(groupedData, fn) {
       let submissionTimes = {};
       for (const [instanceID, questions] of Object.entries(groupedData)) {
@@ -246,6 +295,9 @@ export default defineComponent({
     },
   },
 });
+/**
+ * Styling
+ */
 </script>
 <style scoped>
 h1 {
