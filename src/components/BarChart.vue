@@ -5,8 +5,8 @@ import { Bar } from "vue3-chart-v2";
 export default defineComponent({
   name: "BarChart",
   props: {
-    data: [Array],
-    stylingLabels: {}
+    data: [Array],    // raw data to display on graph
+    stylingLabels: {} // axis and title labels
   },
   watch: {
     data: function() {
@@ -15,6 +15,9 @@ export default defineComponent({
   },
   extends: Bar,
   methods: {
+    /**
+     * Updates and redraws the bar chart to reflect the current data.
+     */
     update() {
       this.renderChart({
       labels: this.data[0],
@@ -29,6 +32,9 @@ export default defineComponent({
     }
   },
   data() {
+    /**
+     * Configurations to style and label the bar chart.
+     */
     return {
       options: {
         maintainAspectRatio: true,
@@ -66,7 +72,6 @@ export default defineComponent({
     };
   },
   mounted() {
-    console.log(this.stylingLabels)
     this.update();
   }
 });

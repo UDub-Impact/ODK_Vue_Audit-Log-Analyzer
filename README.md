@@ -1,24 +1,7 @@
-# vue-crash-2021
-
+# Audit Log Analyzer
 ## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
+Once the project is on your local device, run the following command in the terminal to start a localhost session for the project. Once that is running you will see instructions on the screen to upload your own csv to analyze.
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
